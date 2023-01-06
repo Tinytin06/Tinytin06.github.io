@@ -7,6 +7,7 @@ class square{
 
     };
     draw(ctx){
+        //ctx.drawImage(ASSET_MANAGER.getAsset("./spritesheet (1).png"),0 ,0, 240, 20);
         this.animator.drawFrame(this.game.clockTick, ctx, 10, 10, 480, 60);
     };
 }
