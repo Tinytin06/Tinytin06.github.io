@@ -1,6 +1,7 @@
 // This game shell was happily modified from Googler Seth Ladd's "Bad Aliens" game and his Google IO talk in 2011
 
 class GameEngine {
+    //
     constructor(options) {
         // What you will use to draw
         // Documentation: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
@@ -36,17 +37,25 @@ class GameEngine {
         gameLoop();
     };
 
+    end() {
+        this.running = false;
+
+    };
+
     startInput() {
-        this.keys["d"]=false;
-        this.keys["a"]=false;
-        this.keys["s"]=false;
-        this.keys["w"]=false;
-        console.log(this.keys);
+        this.keys["d"] = false;
+        this.keys["a"] = false;
+        this.keys["s"] = false;
+        this.keys["w"] = false;
+        this.keys["Shift"] = false;
+        this.keys[" "]=false;
+        this.click = {x:0,y:0}
+        //console.log(this.keys);
         const getXandY = e => ({
             x: e.clientX - this.ctx.canvas.getBoundingClientRect().left,
             y: e.clientY - this.ctx.canvas.getBoundingClientRect().top
         });
-        
+
         this.ctx.canvas.addEventListener("mousemove", e => {
             if (this.options.debugging) {
                 console.log("MOUSE_MOVE", getXandY(e));
@@ -79,9 +88,13 @@ class GameEngine {
 
         this.ctx.canvas.addEventListener("keydown", event => {
             this.keys[event.key] = true
-            console.log(this.keys)
+            event.preventDefault();
+       //     console.log(this.keys)
+    //        console.log(event.key + "")
+
         });
         this.ctx.canvas.addEventListener("keyup", event => this.keys[event.key] = false);
+        this.ctx.canvas.addEventListener("keyup", event => this.keys[event.key.toLowerCase()] = false);
     };
 
     addEntity(entity) {
@@ -92,10 +105,12 @@ class GameEngine {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         // drawing on context doesn't work without this
-        this.ctx.beginPath();
+        // this.ctx.beginPath();
+        this.camera.draw(this.ctx);
 
         // Draw latest things first
         for (let i = this.entities.length - 1; i >= 0; i--) {
+            this.ctx.beginPath();
             this.entities[i].draw(this.ctx, this);
         }
     };
