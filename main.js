@@ -17,8 +17,18 @@ ASSET_MANAGER.queueDownload("./assets/Sad Violin - Sound Effect (HD).mp3")
 ASSET_MANAGER.queueDownload("./assets/Dead.png");
 ASSET_MANAGER.queueDownload("./assets/menuBackground.png")
 ASSET_MANAGER.queueDownload("./assets/Levels/levelDC/LevelDC.png")
+ASSET_MANAGER.queueDownload("./assets/smileyboi.png")
+ASSET_MANAGER.queueDownload("./assets/Levels/castle/CastleLevel.png")
+ASSET_MANAGER.queueDownload("./assets/Levels/castle/Castle2.png")
+ASSET_MANAGER.queueDownload("./assets/Subway Surfers Drill.mp3")
+
+
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
+	canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight
+	PARAMS.CANVAS_WIDTH = canvas.width;
+	PARAMS.CANVAS_HEIGHT = canvas.height;
 	const ctx = canvas.getContext("2d");
 	ctx.imageSmoothingEnabled = false;
 	new SceneManager(gameEngine)

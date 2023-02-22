@@ -10,7 +10,7 @@ class SceneManager {
         this.playerSpawnY = 0;
         this.levelLoaded = false;
         this.elapsedTime = 0;
-        this.levels = [level1, slope, breakablefloor, FlatPlane, levelDC]
+        this.levels = [level1, slope, breakablefloor, FlatPlane, Castle, Castle2]
         this.menu = new Menu(game,this,this.levels)
         this.FLOORS = "Floor"
         this.BOXES = "Box"
@@ -49,6 +49,7 @@ class SceneManager {
         this.loadSprings(levelJSONObjects[this.SPRING], layers)
         this.loadLasers(levelJSONObjects[this.LASER], layers)
         this.loadBackground(level)
+        this.loadBackgroundMusic(level)
         this.levelLoaded = true
     };
 
@@ -72,10 +73,10 @@ class SceneManager {
     }
 
     loadPlayer(spawn, layers) {
-        if(!typeof layers[spawn] == 'undefined'){
-            this.player = new Player(this.game, layers[spawn]["objects"][0]["x"], layers[spawn]["objects"][0]["y"],this)
-        }else{
+        if(typeof layers[spawn] == 'undefined'){
             this.player = new Player(this.game, this.playerSpawnX, this.playerSpawnY,this)
+        }else{
+            this.player = new Player(this.game, layers[spawn]["objects"][0]["x"], layers[spawn]["objects"][0]["y"],this)
         }
         console.log("Player loaded")
         this.game.addEntity(this.player)
@@ -192,15 +193,18 @@ class SceneManager {
     }
 
     updatePlayerCoordinates(ctx) {
+        var midpoint = PARAMS.CANVAS_WIDTH/2
+        var maxY = 50;
+        var minY = PARAMS.CANVAS_HEIGHT - 100;
         if (this.player.y <= 50) {
             this.player.y = 50
             this.updateCollisions("y", "velocityY")
         }
-        if (this.player.y > 100) {
-            this.player.y = 100
+        if (this.player.y > minY) {
+            this.player.y = minY
             this.updateCollisions("y", "velocityY")
         }
-        var midpoint = 200
+        
         if (this.player.x < midpoint && this.player.x <= 50) {
             this.player.x = 50
             this.updateCollisions("x", "velocityX")
@@ -209,7 +213,15 @@ class SceneManager {
             this.updateCollisions("x", "velocityX")
         }
     }
-
+    loadBackgroundMusic(level){
+        //default background music
+        if(typeof level["Music"] == 'undefined'){
+            ASSET_MANAGER.playAsset("./assets/Subway Surfers Drill.mp3");
+            console.log("Background Music Undifined for this level playing default");
+        }else{
+            ASSET_MANAGER.playAsset(level["Music"]);
+        }
+    }
     updateCollisions(coordinate, velocity) {
 
         for (let i = 1; i < this.game.entities.length; i++) {
